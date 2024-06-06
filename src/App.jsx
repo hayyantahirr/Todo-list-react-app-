@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import { useState } from "react";
+import { useRef } from "react";
+import Button from "./components/Button";
 
 function App() {
-  const [count, setCount] = useState(0)
+  let inputtext = useRef();
+  const [task, setTask] = useState([]);
+  console.log(task);
+  function addTask() {
+    task.push(inputtext.current.value);
+    setTask([...task]);
+    inputtext.current.value = "";
+  }
+
+  function removeTask(index) {
+    console.log(index);
+    task.splice(index, 1);
+    setTask([...task]);
+  }
+  function editTask(index) {
+    console.log(index);
+    let ask = prompt("Edit the Task");
+    task.splice(index, 1, ask);
+    setTask([...task]);
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1 className="text-center text-[2rem] mt-40">ToDo App</h1>
+      <div className="flex justify-center gap-8 mt-16">
+      <input type="text" placeholder="Enter the Task !" className="input input-bordered w-full max-w-xs " ref={inputtext}/>
+      <Button click={addTask} heading="Add it !"/></div>
+      <ul className="">
+        {task.map((item, index) => {
+          console.log(index);
+          return (
+            <li key={index} className="flex mt-5 justify-center gap-5 align-middle">
+              {item}
+              <button onClick={() => removeTask(index)}><Button remove="Remove it !"/></button>
+              <button onClick={() => editTask(index)}><Button edit="Edit it !"/></button>
+            </li>
+          );
+        })}
+      </ul>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
